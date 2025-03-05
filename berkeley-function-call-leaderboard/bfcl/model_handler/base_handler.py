@@ -852,3 +852,15 @@ class BaseHandler:
         By default, execution results are added back as a `user` role message, as most models don't support the `tool` role in prompting mode.
         """
         raise NotImplementedError
+    
+    def before_batch(
+        self,
+        num_gpus: int,
+        gpu_memory_utilization: float,
+        backend: str,
+        skip_server_setup: bool,
+    ):
+        pass
+
+    def after_batch(self):
+        pass

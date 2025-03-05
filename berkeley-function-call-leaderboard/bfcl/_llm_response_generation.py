@@ -177,7 +177,7 @@ def process_multi_turn_test_case(test_cases):
     return test_cases
 
 
-def multi_threaded_inference(handler, test_case, include_input_log, exclude_state_log):
+def multi_threaded_inference(self, handler, test_case, include_input_log, exclude_state_log):
 
     assert type(test_case["function"]) is list
 
@@ -229,24 +229,16 @@ def multi_threaded_inference(handler, test_case, include_input_log, exclude_stat
 
 
 def generate_results(args, model_name, test_cases_total):
-    update_mode = args.allow_overwrite
     handler = build_handler(model_name, args.temperature)
 
-    if handler.model_style == ModelStyle.OSSMODEL:
-        # batch_inference will handle the writing of results
-        handler.batch_inference(
-            test_entries=test_cases_total,
-            num_gpus=args.num_gpus,
-            gpu_memory_utilization=args.gpu_memory_utilization,
-            backend=args.backend,
-            skip_server_setup=args.skip_server_setup,
-            include_input_log=args.include_input_log,
-            exclude_state_log=args.exclude_state_log,
-            result_dir=args.result_dir,
-            update_mode=update_mode,
-        )
+    handler.before_batch(
+        num_gpus=args.num_gpus,
+        gpu_memory_utilization=args.gpu_memory_utilization,
+        backend=args.backend,
+        skip_server_setup=args.skip_server_setup,
+    )
 
-    else:
+    try:
         futures = []
         with ThreadPoolExecutor(max_workers=args.num_threads) as executor:
             with tqdm(
@@ -267,9 +259,11 @@ def generate_results(args, model_name, test_cases_total):
                     # This will wait for the task to complete, so that we are always writing in order
                     result = future.result()
                     handler.write(
-                        result, result_dir=args.result_dir, update_mode=args.run_ids
-                    )  # Only when we run specific test ids, we will need update_mode=True to keep entries in the same order
+                        result, result_dir=args.result_dir, update_mode=args.allow_overwrite or args.run_ids
+                    )  # Only when we run specific test ids or when allow_overwrite, we will need update_mode=True to keep entries in the same order
                     pbar.update()
+    finally:
+        handler.after_batch()
 
 
 def main(args):
