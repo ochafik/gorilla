@@ -1,3 +1,4 @@
+import os
 from bfcl.model_handler.api_inference.claude import ClaudeHandler
 from bfcl.model_handler.api_inference.cohere import CohereHandler
 from bfcl.model_handler.api_inference.databricks import DatabricksHandler
@@ -8,6 +9,7 @@ from bfcl.model_handler.api_inference.gemini import GeminiHandler
 from bfcl.model_handler.api_inference.gogoagent import GoGoAgentHandler
 from bfcl.model_handler.api_inference.gorilla import GorillaHandler
 from bfcl.model_handler.api_inference.grok import GrokHandler
+from bfcl.model_handler.api_inference.llamacpp import LlamaCppHandler
 from bfcl.model_handler.api_inference.mistral import MistralHandler
 from bfcl.model_handler.api_inference.nexus import NexusHandler
 from bfcl.model_handler.api_inference.nova import NovaHandler
@@ -122,6 +124,11 @@ local_inference_handler_map = {
     "meta-llama/Llama-3.2-3B-Instruct": LlamaHandler,
     "meta-llama/Llama-3.3-70B-Instruct-FC": LlamaFCHandler,
     "meta-llama/Llama-3.3-70B-Instruct": LlamaHandler,
+    "meta-llama/Llama-3.3-70B-Instruct-GGUF": LlamaCppHandler,
+    "bartowski/Llama-3.2-1B-Instruct-GGUF:Q4_K_M": LlamaCppHandler,
+    "bartowski/Llama-3.2-3B-Instruct-GGUF:Q4_K_M": LlamaCppHandler,
+    "bartowski/Meta-Llama-3.1-8B-Instruct-GGUF:Q4_K_M": LlamaCppHandler,
+    "bartowski/Llama-3.3-70B-Instruct-GGUF:Q4_K_M": LlamaCppHandler,
     "Salesforce/xLAM-1b-fc-r": SalesforceHandler,
     "Salesforce/xLAM-7b-fc-r": SalesforceHandler,
     "Salesforce/xLAM-7b-r": SalesforceHandler,
@@ -135,11 +142,15 @@ local_inference_handler_map = {
     "microsoft/Phi-3-medium-4k-instruct": PhiHandler,
     "microsoft/Phi-3-medium-128k-instruct": PhiHandler,
     "microsoft/Phi-3.5-mini-instruct": PhiHandler,
+    "bartowski/Phi-3.5-mini-instruct-GGUF:Q4_K_M": LlamaCppHandler,
+    "bartowski/phi-4-GGUF:Q4_K_M": LlamaCppHandler,
     "NousResearch/Hermes-2-Pro-Mistral-7B": HermesHandler,
     "NousResearch/Hermes-2-Pro-Llama-3-8B": HermesHandler,
+    "bartowski/Hermes-2-Pro-Llama-3-8B-GGUF:Q4_K_M": LlamaCppHandler,
     "NousResearch/Hermes-2-Theta-Llama-3-8B": HermesHandler,
     "NousResearch/Hermes-2-Pro-Llama-3-70B": HermesHandler,
     "NousResearch/Hermes-2-Theta-Llama-3-70B": HermesHandler,
+    "bartowski/Hermes-3-Llama-3.1-8B-GGUF:Q4_K_M": LlamaCppHandler,
     "ibm-granite/granite-20b-functioncalling": GraniteHandler,
     "MadeAgents/Hammer2.1-7b": HammerHandler,
     "MadeAgents/Hammer2.1-3b": HammerHandler,
@@ -155,6 +166,19 @@ local_inference_handler_map = {
     "Qwen/Qwen2.5-14B-Instruct": QwenHandler,
     "Qwen/Qwen2.5-32B-Instruct": QwenHandler,
     "Qwen/Qwen2.5-72B-Instruct": QwenHandler,
+    "bartowski/Qwen2.5-1.5B-Instruct-GGUF:Q4_K_M": LlamaCppHandler,
+    "bartowski/Qwen2.5-3B-Instruct-GGUF:Q4_K_M": LlamaCppHandler,
+    "bartowski/Qwen2.5-7B-Instruct-GGUF:Q4_K_M": LlamaCppHandler,
+    "bartowski/Qwen2.5-Coder-0.5B-Instruct-GGUF:Q4_K_M": LlamaCppHandler,
+    "bartowski/Qwen2.5-Coder-1.5B-Instruct-GGUF:Q4_K_M": LlamaCppHandler,
+    "bartowski/Qwen2.5-Coder-3B-Instruct-GGUF:Q4_K_M": LlamaCppHandler,
+    "bartowski/Qwen2.5-Coder-7B-Instruct-GGUF:Q4_K_M": LlamaCppHandler,
+    "bartowski/Qwen2.5-Coder-32B-Instruct-GGUF:Q4_K_M": LlamaCppHandler,
+    "bartowski/Mistral-Nemo-Instruct-2407-GGUF:Q4_K_M": LlamaCppHandler,
+    "bartowski/functionary-small-v3.2-GGUF:Q4_K_M": LlamaCppHandler,
+    "bartowski/firefunction-v2-GGUF:IQ1_M": LlamaCppHandler,
+    "bartowski/c4ai-command-r7b-12-2024-GGUF:Q6_K_L": LlamaCppHandler,
+    "bartowski/gemma-2-2b-it-GGUF:Q8_0": LlamaCppHandler,
     "Team-ACE/ToolACE-8B": LlamaHandler,
     "openbmb/MiniCPM3-4B": MiniCPMHandler,
     "openbmb/MiniCPM3-4B-FC": MiniCPMFCHandler,
@@ -212,3 +236,6 @@ outdated_model_handler_map = {
 }
 
 HANDLER_MAP = {**api_inference_handler_map, **local_inference_handler_map}
+
+if os.environ.get("LLAMA_CPP_ONLY") == "1":
+    HANDLER_MAP = {k: v for k, v in HANDLER_MAP.items() if v == LlamaCppHandler}
