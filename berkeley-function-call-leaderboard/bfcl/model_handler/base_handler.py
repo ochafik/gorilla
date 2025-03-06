@@ -855,6 +855,7 @@ class BaseHandler:
     
     def before_batch(
         self,
+        *,
         num_gpus: int,
         gpu_memory_utilization: float,
         backend: str,

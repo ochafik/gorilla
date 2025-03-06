@@ -128,16 +128,16 @@ class OSSHandler(BaseHandler, EnforceOverrides):
         self.monitor = None
 
     @override
-    def inference(self, test_case: dict, include_input_log: bool, exclude_state_log: bool):
-        assert type(test_case["function"]) is list
+    def inference(self, test_entry: dict, include_input_log: bool, exclude_state_log: bool):
+        assert type(test_entry["function"]) is list
 
-        if "multi_turn" in test_case["id"]:
+        if "multi_turn" in test_entry["id"]:
             return self.inference_multi_turn_prompting(
-                test_case, include_input_log, exclude_state_log
+                test_entry, include_input_log, exclude_state_log
             )
         else:
             return self.inference_single_turn_prompting(
-                test_case, include_input_log
+                test_entry, include_input_log
             )
 
     #### Prompting methods ####

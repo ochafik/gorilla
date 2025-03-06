@@ -177,7 +177,7 @@ def process_multi_turn_test_case(test_cases):
     return test_cases
 
 
-def multi_threaded_inference(self, handler, test_case, include_input_log, exclude_state_log):
+def multi_threaded_inference(handler, test_case, include_input_log, exclude_state_log):
 
     assert type(test_case["function"]) is list
 
