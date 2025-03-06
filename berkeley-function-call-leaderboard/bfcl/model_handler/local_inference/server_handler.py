@@ -7,7 +7,7 @@ import requests
 
 class LocalServerHandler:
     def __init__(self, command: list[str] | None, host: str, port: int, ready_path: str):
-        self.ready_url = f"http://{host}:{port}${ready_path}"
+        self.ready_url = f"http://{host}:{port}{ready_path}"
 
         if command:
             self.process = subprocess.Popen(command,
@@ -82,7 +82,7 @@ class LocalServerHandler:
         self.stderr_thread = None
         self.stop_event = None
 
-    def log_subprocess_output(pipe, stop_event):
+    def log_subprocess_output(self, pipe, stop_event):
         # Read lines until stop event is set
         for line in iter(pipe.readline, ""):
             if stop_event.is_set():

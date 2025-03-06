@@ -23,50 +23,51 @@ class LlamaCppHandler(BaseHandler, EnforceOverrides):
     def __init__(self, model_name, temperature) -> None:
         super().__init__(model_name, temperature)
         self.model_style = ModelStyle.OpenAI
+        self.model_hf_name = model_name
         self.llama_server_host = os.getenv("LLAMA_SERVER_ENDPOINT", "localhost")
         self.llama_server_port = os.getenv("LLAMA_SERVER_PORT", LLAMA_SERVER_DEFAULT_PORT)
 
         self.base_url = f"http://{self.llama_server_host}:{self.llama_server_port}/v1"
-        self.client = OpenAI(base_url=self.base_url, api_key=os.getenv("LLAMA_SERVER_API_KEY"))
+        self.client = OpenAI(base_url=self.base_url, api_key=os.getenv("LLAMA_SERVER_API_KEY", ""))
         self.is_fc_model = True
         self.server_handler = None
 
     @override
-    def before_batch(self):
+    def before_batch(
+        self,
+        *,
+        num_gpus: int,
+        gpu_memory_utilization: float,
+        backend: str,
+        skip_server_setup: bool,
+    ):
+        print("Starting llama-server.")
         self.server_handler = LocalServerHandler(
             command=[
                 os.environ.get("LLAMA_SERVER_BIN_PATH", "llama-server"),
                 "--jinja",
                 "-fa",
                 "-hf",
-                str(self.model_name_huggingface),
+                str(self.model_hf_name),
+                "--host",
+                str(self.llama_server_host),
                 "--port",
-                str(self.vllm_port),
+                str(self.llama_server_port),
             ],
-            host=self.vllm_host,
-            port=self.vllm_port,
-            ready_path="/v1/models",
+            host=self.llama_server_host,
+            port=self.llama_server_port,
+            ready_path="/health",
         )
 
         self.server_handler.wait_for_server_ready()
 
     @override
     def after_batch(self):
+        print("Terminating llama-server.")
         self.server_handler.terminate()
         self.monitor = None
 
     @override
-    def inference(self, test_entry: dict, include_input_log: bool, exclude_state_log: bool):
-        """
-        OSS models have a different inference method.
-        They needs to spin up a server first and then send requests to it.
-        It is more efficient to spin up the server once for the whole batch, instead of for each individual entry.
-        So we implement batch_inference method instead.
-        """
-        raise NotImplementedError(
-            "OSS Models should call the batch_inference method instead."
-        )
-
     def decode_ast(self, result, language="Python"):
         decoded_output = []
         for invoked_function in result:
@@ -75,6 +76,7 @@ class LlamaCppHandler(BaseHandler, EnforceOverrides):
             decoded_output.append({name: params})
         return decoded_output
 
+    @override
     def decode_execute(self, result):
         return convert_to_function_call(result)
 
@@ -88,6 +90,7 @@ class LlamaCppHandler(BaseHandler, EnforceOverrides):
 
     #### FC methods ####
 
+    @override
     def _query_FC(self, inference_data: dict):
         message: list[dict] = inference_data["message"]
         tools = inference_data["tools"]
@@ -100,10 +103,12 @@ class LlamaCppHandler(BaseHandler, EnforceOverrides):
             tools=tools if len(tools) > 0 else None,
         )
 
+    @override
     def _pre_query_processing_FC(self, inference_data: dict, test_entry: dict) -> dict:
         inference_data["message"] = []
         return inference_data
 
+    @override
     def _compile_tools(self, inference_data: dict, test_entry: dict) -> dict:
         functions: list = test_entry["function"]
         test_category: str = test_entry["id"].rsplit("_", 1)[0]
@@ -115,6 +120,7 @@ class LlamaCppHandler(BaseHandler, EnforceOverrides):
 
         return inference_data
 
+    @override
     def _parse_query_response_FC(self, api_response: any) -> dict:
         try:
             model_responses = [
@@ -138,18 +144,21 @@ class LlamaCppHandler(BaseHandler, EnforceOverrides):
             "output_token": api_response.usage.completion_tokens,
         }
 
+    @override
     def add_first_turn_message_FC(
         self, inference_data: dict, first_turn_message: list[dict]
     ) -> dict:
         inference_data["message"].extend(first_turn_message)
         return inference_data
 
+    @override
     def _add_next_turn_user_message_FC(
         self, inference_data: dict, user_message: list[dict]
     ) -> dict:
         inference_data["message"].extend(user_message)
         return inference_data
 
+    @override
     def _add_assistant_message_FC(
         self, inference_data: dict, model_response_data: dict
     ) -> dict:
@@ -158,6 +167,7 @@ class LlamaCppHandler(BaseHandler, EnforceOverrides):
         )
         return inference_data
 
+    @override
     def _add_execution_results_FC(
         self,
         inference_data: dict,
@@ -179,6 +189,7 @@ class LlamaCppHandler(BaseHandler, EnforceOverrides):
 
     #### Prompting methods ####
 
+    @override
     def _query_prompting(self, inference_data: dict):
         inference_data["inference_input_log"] = {"message": repr(inference_data["message"])}
 
@@ -188,6 +199,7 @@ class LlamaCppHandler(BaseHandler, EnforceOverrides):
             temperature=self.temperature,
         )
 
+    @override
     def _pre_query_processing_prompting(self, test_entry: dict) -> dict:
         functions: list = test_entry["function"]
         test_category: str = test_entry["id"].rsplit("_", 1)[0]
@@ -200,6 +212,7 @@ class LlamaCppHandler(BaseHandler, EnforceOverrides):
 
         return {"message": []}
 
+    @override
     def _parse_query_response_prompting(self, api_response: any) -> dict:
         return {
             "model_responses": api_response.choices[0].message.content,
@@ -208,18 +221,21 @@ class LlamaCppHandler(BaseHandler, EnforceOverrides):
             "output_token": api_response.usage.completion_tokens,
         }
 
+    @override
     def add_first_turn_message_prompting(
         self, inference_data: dict, first_turn_message: list[dict]
     ) -> dict:
         inference_data["message"].extend(first_turn_message)
         return inference_data
 
+    @override
     def _add_next_turn_user_message_prompting(
         self, inference_data: dict, user_message: list[dict]
     ) -> dict:
         inference_data["message"].extend(user_message)
         return inference_data
 
+    @override
     def _add_assistant_message_prompting(
         self, inference_data: dict, model_response_data: dict
     ) -> dict:
@@ -228,6 +244,7 @@ class LlamaCppHandler(BaseHandler, EnforceOverrides):
         )
         return inference_data
 
+    @override
     def _add_execution_results_prompting(
         self, inference_data: dict, execution_results: list[str], model_response_data: dict
     ) -> dict:
