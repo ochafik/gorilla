@@ -233,6 +233,7 @@ def generate_results(args, model_name, test_cases_total):
 
     handler.before_batch(
         num_gpus=args.num_gpus,
+        num_threads=args.num_threads,
         gpu_memory_utilization=args.gpu_memory_utilization,
         backend=args.backend,
         skip_server_setup=args.skip_server_setup,

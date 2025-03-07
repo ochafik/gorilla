@@ -49,6 +49,7 @@ class OSSHandler(BaseHandler, EnforceOverrides):
         self,
         *,
         num_gpus: int,
+        num_threads: int,
         gpu_memory_utilization: float,
         backend: str,
         skip_server_setup: bool,

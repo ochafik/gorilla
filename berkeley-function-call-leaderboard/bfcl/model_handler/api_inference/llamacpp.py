@@ -37,6 +37,7 @@ class LlamaCppHandler(BaseHandler, EnforceOverrides):
         self,
         *,
         num_gpus: int,
+        num_threads: int,
         gpu_memory_utilization: float,
         backend: str,
         skip_server_setup: bool,
@@ -46,6 +47,8 @@ class LlamaCppHandler(BaseHandler, EnforceOverrides):
             command=[
                 os.environ.get("LLAMA_SERVER_BIN_PATH", "llama-server"),
                 "--jinja",
+                "--parallel",
+                str(num_threads),
                 "-fa",
                 "-hf",
                 str(self.model_hf_name),
