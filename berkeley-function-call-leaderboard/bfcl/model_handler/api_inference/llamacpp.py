@@ -27,8 +27,8 @@ class LlamaCppHandler(BaseHandler, EnforceOverrides):
         self.llama_server_host = os.getenv("LLAMA_SERVER_ENDPOINT", "localhost")
         self.llama_server_port = os.getenv("LLAMA_SERVER_PORT", LLAMA_SERVER_DEFAULT_PORT)
 
-        self.base_url = f"http://{self.llama_server_host}:{self.llama_server_port}/v1"
-        self.client = OpenAI(base_url=self.base_url, api_key=os.getenv("LLAMA_SERVER_API_KEY", ""))
+        self.base_url = f"http://{self.llama_server_host}:{self.llama_server_port}/v1/"
+        self.client = OpenAI(base_url=self.base_url, api_key=os.getenv("LLAMA_SERVER_API_KEY", "..."))
         self.is_fc_model = True
         self.server_handler = None
 
