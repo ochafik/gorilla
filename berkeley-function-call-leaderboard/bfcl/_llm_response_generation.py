@@ -210,6 +210,7 @@ def multi_threaded_inference(handler, test_case, include_input_log, exclude_stat
                 print(
                     "❗️❗️ Error occurred during inference. Maximum reties reached for rate limit or other error. Continuing to next test case."
                 )
+                print(f"❗️❗️ {e}")
                 print(f"❗️❗️ Test case ID: {test_case['id']}, Error: {str(e)}")
                 print("-" * 100)
 
