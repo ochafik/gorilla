@@ -752,29 +752,76 @@ MODEL_METADATA_MAPPING = {
         "Microsoft",
         "MIT",
     ],
+    "bartowski/Phi-3.5-mini-instruct-GGUF": [
+        "Phi-3.5-mini-instruct-GGUF:Q4_K_M (FC)",
+        "https://huggingface.co/bartowski/Phi-3.5-mini-instruct-GGUF",
+        "Microsoft",
+        "?",
+    ],
     "bartowski/phi-4-GGUF": [
-        "Phi-4 (FC)",
+        "Phi-4-GGUF:Q4_K_M (FC)",
         "https://huggingface.co/bartowski/phi-4-GGUF",
         "Microsoft",
         "MIT",
     ],
     "bartowski/microsoft_Phi-4-mini-instruct-GGUF": [
-        "Phi-4-mini-instruct (FC)",
+        "Phi-4-mini-instruct-GGUF:Q4_K_M (FC)",
         "https://huggingface.co/bartowski/microsoft_Phi-4-mini-instruct-GGUF",
         "Microsoft",
         "MIT",
     ],
     "bartowski/Qwen2.5-Coder-7B-Instruct-GGUF": [
-        "Qwen2.5-Coder-7B-Instruct-GGUF (FC)",
+        "Qwen2.5-Coder-7B-Instruct-GGUF:Q4_K_M (FC)",
         "https://huggingface.co/bartowski/Qwen2.5-Coder-7B-Instruct-GGUF",
         "Qwen",
         "apache-2.0",
     ],
     "bartowski/Qwen2.5-Coder-32B-Instruct-GGUF": [
-        "Qwen2.5-Coder-32B-Instruct-GGUF (FC)",
+        "Qwen2.5-Coder-32B-Instruct-GGUF:Q4_K_M (FC)",
         "https://huggingface.co/bartowski/Qwen2.5-Coder-32B-Instruct-GGUF",
         "Qwen",
         "apache-2.0",
+    ],
+    # "bartowski/Llama-3.3-70B-Instruct-GGUF"
+    # "bartowski/Llama-3.2-1B-Instruct-GGUF"
+    # "bartowski/Llama-3.2-3B-Instruct-GGUF"
+    # "bartowski/Meta-Llama-3.1-8B-Instruct-GGUF"
+    # "bartowski/Llama-3.3-70B-Instruct-GGUF"
+    # "bartowski/microsoft_Phi-4-mini-instruct-GGUF"
+    # "bartowski/Hermes-2-Pro-Llama-3-8B-GGUF"
+    # "bartowski/Hermes-3-Llama-3.1-8B-GGUF"
+    # "bartowski/Qwen2.5-1.5B-Instruct-GGUF"
+    # "bartowski/Qwen2.5-3B-Instruct-GGUF"
+    # "bartowski/Qwen2.5-7B-Instruct-GGUF"
+    # "bartowski/Qwen2.5-Coder-0.5B-Instruct-GGUF"
+    # "bartowski/Qwen2.5-Coder-1.5B-Instruct-GGUF"
+    # "bartowski/Qwen2.5-Coder-3B-Instruct-GGUF"
+    # "bartowski/Qwen2.5-Coder-7B-Instruct-GGUF"
+    # "bartowski/Qwen2.5-Coder-32B-Instruct-GGUF"
+    # "bartowski/functionary-small-v3.2-GGUF"
+    "bartowski/Mistral-Nemo-Instruct-2407-GGUF": [
+        "Mistral-Nemo-Instruct-2407-GGUF:Q4_K_M (FC)",
+        "https://huggingface.co/bartowski/Mistral-Nemo-Instruct-2407-GGUF",
+        "Mistral AI",
+        "?",
+    ],
+    "bartowski/firefunction-v2-GGUF:IQ1_M": [
+        "FireFunction-v2-GGUF:IQ1_M (FC)",
+        "https://huggingface.co/bartowski/firefunction-v2-GGUF:IQ1_M",
+        "Fireworks",
+        "?",
+    ],
+    "bartowski/c4ai-command-r7b-12-2024-GGUF:Q6_K_L": [
+        "Command-R7B-12-2024-GGUF:Q6_K_L (FC)",
+        "https://huggingface.co/bartowski/c4ai-command-r7b-12-2024-GGUF:Q6_K_L",
+        "Cohere",
+        "?",
+    ],
+    "bartowski/gemma-2-2b-it-GGUF:Q8_0": [
+        "gemma-2-2b-it-GGUF:Q8_0 (FC)",
+        "https://huggingface.co/bartowski/gemma-2-2b-it-GGUF:Q8_0",
+        "Google",
+        "gemma-terms-of-use",
     ],
     "Qwen/Qwen2-1.5B-Instruct": [
         "Qwen2-1.5B-Instruct (Prompt)",
