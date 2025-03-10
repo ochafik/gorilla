@@ -14,6 +14,8 @@ class LocalServerHandler:
                 stdout=subprocess.PIPE,  # Capture stdout
                 stderr=subprocess.PIPE,  # Capture stderr
                 text=True,  # To get the output as text instead of bytes
+                encoding='utf-8',
+                errors='replace',
             )
             self.skip_server_setup = False
         else:
@@ -50,6 +52,8 @@ class LocalServerHandler:
                 if response.status_code == 200:
                     server_ready = True
                     print("server is ready!")
+                elif response.status_code == 503:
+                    time.sleep(1)
             except requests.exceptions.ConnectionError:
                 # If the connection is not ready, wait and try again
                 time.sleep(1)
@@ -84,7 +88,7 @@ class LocalServerHandler:
 
     def log_subprocess_output(self, pipe, stop_event):
         # Read lines until stop event is set
-        for line in iter(lambda: pipe.readline().decode('utf-8', errors='replace'), ""):
+        for line in iter(pipe.readline, ""):
             if stop_event.is_set():
                 break
             else:
