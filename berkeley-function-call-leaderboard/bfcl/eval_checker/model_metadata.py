@@ -752,6 +752,30 @@ MODEL_METADATA_MAPPING = {
         "Microsoft",
         "MIT",
     ],
+    "bartowski/phi-4-GGUF": [
+        "Phi-4 (FC)",
+        "https://huggingface.co/bartowski/phi-4-GGUF",
+        "Microsoft",
+        "MIT",
+    ],
+    "bartowski/microsoft_Phi-4-mini-instruct-GGUF": [
+        "Phi-4-mini-instruct (FC)",
+        "https://huggingface.co/bartowski/microsoft_Phi-4-mini-instruct-GGUF",
+        "Microsoft",
+        "MIT",
+    ],
+    "bartowski/Qwen2.5-Coder-7B-Instruct-GGUF": [
+        "Qwen2.5-Coder-7B-Instruct-GGUF (FC)",
+        "https://huggingface.co/bartowski/Qwen2.5-Coder-7B-Instruct-GGUF",
+        "Qwen",
+        "apache-2.0",
+    ],
+    "bartowski/Qwen2.5-Coder-32B-Instruct-GGUF": [
+        "Qwen2.5-Coder-32B-Instruct-GGUF (FC)",
+        "https://huggingface.co/bartowski/Qwen2.5-Coder-32B-Instruct-GGUF",
+        "Qwen",
+        "apache-2.0",
+    ],
     "Qwen/Qwen2-1.5B-Instruct": [
         "Qwen2-1.5B-Instruct (Prompt)",
         "https://huggingface.co/Qwen/Qwen2-1.5B-Instruct",

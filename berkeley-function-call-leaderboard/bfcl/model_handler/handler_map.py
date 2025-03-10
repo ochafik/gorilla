@@ -144,6 +144,7 @@ local_inference_handler_map = {
     "microsoft/Phi-3.5-mini-instruct": PhiHandler,
     "bartowski/Phi-3.5-mini-instruct-GGUF": LlamaCppHandler,
     "bartowski/phi-4-GGUF": LlamaCppHandler,
+    "bartowski/microsoft_Phi-4-mini-instruct-GGUF": LlamaCppHandler,
     "NousResearch/Hermes-2-Pro-Mistral-7B": HermesHandler,
     "NousResearch/Hermes-2-Pro-Llama-3-8B": HermesHandler,
     "bartowski/Hermes-2-Pro-Llama-3-8B-GGUF": LlamaCppHandler,
