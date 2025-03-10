@@ -84,7 +84,7 @@ class LocalServerHandler:
 
     def log_subprocess_output(self, pipe, stop_event):
         # Read lines until stop event is set
-        for line in iter(pipe.readline, ""):
+        for line in iter(lambda: pipe.readline().decode('utf-8', errors='replace'), ""):
             if stop_event.is_set():
                 break
             else:
